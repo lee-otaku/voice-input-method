@@ -15,9 +15,23 @@ android {
         versionName = "0.1.0"
     }
 
+    val ksFile = rootProject.file("keystore/release.keystore")
+
+    signingConfigs {
+        create("release") {
+            if (ksFile.exists()) {
+                storeFile = ksFile
+                storePassword = (project.findProperty("STORE_PASS") as String?) ?: "bridge2024"
+                keyAlias = (project.findProperty("KEY_ALIAS") as String?) ?: "bridge"
+                keyPassword = (project.findProperty("KEY_PASS") as String?) ?: "bridge2024"
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            if (ksFile.exists()) signingConfig = signingConfigs.getByName("release")
         }
     }
 

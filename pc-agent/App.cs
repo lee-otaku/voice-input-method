@@ -3,21 +3,18 @@ using System.Drawing.Drawing2D;
 
 namespace PcAgent;
 
-/// <summary>托盘应用主体：装配 服务 / 焦点检测 / 托盘菜单 / 配对窗口</summary>
+/// <summary>托盘应用主体：装配 服务 / 焦点检测 / 主窗口 / 托盘图标</summary>
 internal sealed class App : ApplicationContext
 {
     private readonly AppSettings _settings;
     private readonly WsServer _server;
     private readonly FocusWatcher _watcher = new();
     private readonly NotifyIcon _tray;
-    private readonly ToolStripMenuItem _miStatus;
-    private readonly ToolStripMenuItem _miEnabled;
-    private readonly ToolStripMenuItem _miAutoStart;
-    private SynchronizationContext _ui = SynchronizationContext.Current ?? new SynchronizationContext();
-    private PairingForm? _pairing;
+    private readonly MainForm _main;
 
     public App()
     {
+        _instance = this;
         _settings = AppSettings.Load();
 
         _server = new WsServer
@@ -28,74 +25,45 @@ internal sealed class App : ApplicationContext
             QueryFocus = _watcher.QueryNow,
         };
 
-        // ---- 托盘 UI（先创建控件，WindowsFormsSynchronizationContext 随首个控件安装）----
-        _miStatus = new ToolStripMenuItem("状态：未连接设备") { Enabled = false };
-        _miEnabled = new ToolStripMenuItem("启用输入映射") { Checked = _settings.MappingEnabled };
-        _miEnabled.Click += (s, e) =>
-        {
-            _miEnabled.Checked = !_miEnabled.Checked;
-            _settings.MappingEnabled = _miEnabled.Checked;
-            _server.MappingEnabled = _miEnabled.Checked;
-            _settings.Save();
-        };
-        _miAutoStart = new ToolStripMenuItem("开机自启") { Checked = AutoStartHelper.IsSet() };
-        _miAutoStart.Click += (s, e) =>
-        {
-            _miAutoStart.Checked = !_miAutoStart.Checked;
-            AutoStartHelper.Set(_miAutoStart.Checked);
-            _settings.AutoStart = _miAutoStart.Checked;
-            _settings.Save();
-        };
+        _main = new MainForm(_settings, _server, _watcher);
 
         var menu = new ContextMenuStrip();
-        menu.Items.Add(_miStatus);
-        menu.Items.Add(new ToolStripSeparator());
-        menu.Items.Add(_miEnabled);
-        menu.Items.Add("显示配对信息…", null, (s, e) => ShowPairingDialog());
-        menu.Items.Add("断开设备", null, (s, e) => _server.DisconnectClient());
-        menu.Items.Add(_miAutoStart);
+        menu.Items.Add("打开主界面", null, (s, e) => ShowMain());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("退出", null, (s, e) => ExitApp());
 
         _tray = new NotifyIcon
         {
             Icon = MakeIcon(),
-            Text = "PC 输入桥接 - 未连接",
+            Text = "PC 输入桥接",
             Visible = true,
             ContextMenuStrip = menu,
         };
-        _tray.DoubleClick += (s, e) => ShowPairingDialog();
+        _tray.DoubleClick += (s, e) => ShowMain();
 
-        // ---- 事件接线（此时 WinForms 同步上下文已安装，Post 会回到 UI 线程）----
-        _ui = SynchronizationContext.Current ?? _ui;
-        _server.Log += msg => _ui.Post(_ => _pairing?.AppendLog($"[{DateTime.Now:HH:mm:ss}] {msg}"), null);
-        _server.ClientChanged += () => _ui.Post(_ => UpdateTrayStatus(), null);
-        _watcher.Changed += fs =>
-        {
-            _ = _server.PushFocusAsync(fs);
-            _ui.Post(_ => UpdateTrayStatus(), null);
-        };
+        _watcher.Changed += fs => _ = _server.PushFocusAsync(fs);
 
         _watcher.Start();
         _server.Start();
+        _main.Show();
     }
 
-    private void ShowPairingDialog()
+    private void ShowMain()
     {
-        if (_pairing != null) { _pairing.Activate(); return; }
-        _pairing = new PairingForm(_settings, _server);
-        _pairing.FormClosed += (s, e) => _pairing = null;
-        _pairing.Show();
+        _main.Show();
+        _main.WindowState = FormWindowState.Normal;
+        _main.Activate();
     }
 
-    private void UpdateTrayStatus()
+    internal static void ShowTrayBubble(string msg)
     {
-        var device = _server.CurrentDevice;
-        _miStatus.Text = device == null ? "状态：未连接设备" : $"状态：已连接 {device}";
-        _tray.Text = device == null ? "PC 输入桥接 - 未连接" : $"PC 输入桥接 - {device}";
+        // 由 Program 持有的托盘实例显示；此处通过查找创建者传入（简化：直接由 App 静态引用）
+        _instance?._tray.ShowBalloonTip(3000, "PC 输入桥接", msg, ToolTipIcon.Info);
     }
 
-    private static Icon MakeIcon()
+    private static App? _instance;
+
+    internal static Icon MakeIcon()
     {
         using var bmp = new Bitmap(32, 32);
         using (var g = Graphics.FromImage(bmp))
@@ -115,7 +83,6 @@ internal sealed class App : ApplicationContext
     {
         _tray.Visible = false;
         _tray.Dispose();
-        _pairing?.Close();
         _watcher.Dispose();
         _server.Dispose();
         Application.Exit();

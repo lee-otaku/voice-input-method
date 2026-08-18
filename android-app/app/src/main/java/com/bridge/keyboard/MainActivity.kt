@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         if (!c.autoMode) return
         if (sendJob?.isActive == true) return
         cancelDebounce()
-        if (binding.input.text.isNotBlank()) {
+        if (!binding.input.text.isNullOrBlank()) {
             debounceRunnable = Runnable { doSend(manual = false) }
             handler.postDelayed(debounceRunnable!!, c.debounceSec * 1000L)
         }
