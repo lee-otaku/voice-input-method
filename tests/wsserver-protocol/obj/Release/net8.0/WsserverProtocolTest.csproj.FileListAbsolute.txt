@@ -1,0 +1,15 @@
+/workspace/tests/wsserver-protocol/bin/Release/net8.0/WsserverProtocolTest
+/workspace/tests/wsserver-protocol/bin/Release/net8.0/WsserverProtocolTest.deps.json
+/workspace/tests/wsserver-protocol/bin/Release/net8.0/WsserverProtocolTest.runtimeconfig.json
+/workspace/tests/wsserver-protocol/bin/Release/net8.0/WsserverProtocolTest.dll
+/workspace/tests/wsserver-protocol/bin/Release/net8.0/WsserverProtocolTest.pdb
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/WsserverProtocolTest.GeneratedMSBuildEditorConfig.editorconfig
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/WsserverProtocolTest.AssemblyInfoInputs.cache
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/WsserverProtocolTest.AssemblyInfo.cs
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/WsserverProtocolTest.csproj.CoreCompileInputs.cache
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/WsserverProtocolTest.sourcelink.json
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/WsserverProtocolTest.dll
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/refint/WsserverProtocolTest.dll
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/WsserverProtocolTest.pdb
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/WsserverProtocolTest.genruntimeconfig.cache
+/workspace/tests/wsserver-protocol/obj/Release/net8.0/ref/WsserverProtocolTest.dll

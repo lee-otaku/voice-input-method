@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PcAgent.ProtocolTest</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 直接复用 PC 端源码，验证协议层（WsServer 本身不依赖 WinForms） -->
+    <Compile Include="../../pc-agent/WsServer.cs" Link="WsServer.cs" />
+    <Compile Include="../../pc-agent/Protocol.cs" Link="Protocol.cs" />
+  </ItemGroup>
+
+</Project>

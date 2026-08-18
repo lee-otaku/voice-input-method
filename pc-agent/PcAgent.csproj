@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PcAgent</RootNamespace>
+    <AssemblyName>PcAgent</AssemblyName>
+    <Version>0.1.0</Version>
+    <AssemblyTitle>PC 输入桥接 Agent</AssemblyTitle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 仅用于生成配对二维码（PngByteQRCode 不依赖 GDI+） -->
+    <PackageReference Include="QRCoder" Version="1.4.3" />
+  </ItemGroup>
+
+</Project>
