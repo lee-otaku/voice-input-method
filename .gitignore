@@ -1,0 +1,32 @@
+# 构建产物
+bin/
+obj/
+build/
+.gradle/
+*.apk
+!dist/*.apk
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# 本地配置
+local.properties
+android-app/local.properties
+
+# 发布产物（仅保留 dist/ 下的安装包）
+pc-agent/bin/
+pc-agent/obj/
+android-app/app/build/
+android-app/build/
+android-app/.gradle/
+
+# 密钥（正式发布请用自己的）
+android-app/keystore/
+
+# 临时
+*.log
+*.tmp
