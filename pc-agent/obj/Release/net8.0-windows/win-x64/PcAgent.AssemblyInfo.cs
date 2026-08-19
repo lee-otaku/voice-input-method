@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PcAgent")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0+dd31a90973e5c1888b19ff77ff820de3f7cc374c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0+b2a05b746ad54a77e3b269186f8230a4f01ff40b")]
 [assembly: System.Reflection.AssemblyProductAttribute("PcAgent")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PC 输入桥接 Agent")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.1.0.0")]
